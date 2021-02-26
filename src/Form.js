@@ -5,15 +5,15 @@ const Form = (props) => {
   let history = useHistory();
 
   //Grab the product ID from the URL
-  const prodID = props.match.params.id;
-  console.log("FORM product ID: ", prodID);
+  const urlID = props.match.params.id;
+  console.log("FORM product ID: ", urlID);
 
   //Create an empty review variable to initialize the state
   const emptyReview = {
     title: "enter title",
     content: "enter content",
     author: "enter name",
-    product_id: prodID,
+    id_represented: urlID,
   };
 
   //STATE FOR THE FORM

@@ -2,24 +2,38 @@ import "./App.css";
 import React, { useState, useEffect } from "react";
 import { useHistory } from "react-router-dom";
 import { Route, Link, Switch } from "react-router-dom";
+import Form from "./Form";
 
 const ReviewDisplay = (props) => {
   const { currentProduct } = props;
   //console.log("REVIEW DISPLAY all props - ", props);
 
+  let history = useHistory();
+
   const prodID = props.match.params.id;
   //console.log("REVIEW DISPLAY product ID: ", prodID);
   console.log("REVIEW DISPLAY currentProduct- ", currentProduct);
 
+  const clickUpdate = (id) => {
+    console.log("You selected review # ", id);
+    history.push(`/reviews/${id}`);
+  };
+
+  const clickDelete = (id) => {
+    props.deleteReview(id);
+  };
   //----------- LOADED FUNCTION TO USE WHEN PROPS ARE LOADED ------------
   const loaded = () => {
     const reviews = currentProduct.reviews.map((item, index) => {
       return (
-        <div>
+        <div className="review">
           <h3 key={index}>
-            Review {item.id}: {item.title}
+            Review # {item.id}: {item.title}
           </h3>
-          <p>{item.content}</p>
+          <p>By: {item.author}</p>
+          <p>Says: {item.content}</p>
+          <button onClick={() => clickUpdate(item.id)}>Update Review</button>
+          <button onClick={() => clickDelete(item.id)}>Delete Review</button>
         </div>
       );
     });

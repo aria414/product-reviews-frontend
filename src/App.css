@@ -1,7 +1,8 @@
 .App {
   text-align: center;
 }
-.productCard {
+.productCard,
+.review {
   border: 2px solid #c4c4c4;
   margin: 0 auto 2% auto;
   width: 300px;

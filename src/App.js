@@ -5,8 +5,11 @@ import ProductDisplay from "./ProductDisplay";
 import ReviewDisplay from "./ReviewDisplay";
 import Form from "./Form";
 import { Route, Link, Switch } from "react-router-dom";
+import { useHistory } from "react-router-dom";
 
 function App() {
+  let history = useHistory();
+
   const url = "http://localhost:3000/products/";
 
   //Make a state to hold all of the products after fetch from database.
@@ -40,7 +43,7 @@ function App() {
     };
 
     //We need to grab product_id to use in the create route URL
-    const productID = newReview.product_id;
+    const productID = newReview.id_represented;
 
     //Pass in the ID to the CREATE ROUTE and pass in the cleaned data
     await fetch(url + productID + "/reviews", {
@@ -54,6 +57,41 @@ function App() {
     });
 
     console.log("New Review written: ", newReview);
+  };
+
+  // ------ UPDATE ROUTE -------
+  const handleUpdate = async (updateReview) => {
+    const reviewData = {
+      title: updateReview.title,
+      author: updateReview.author,
+      content: updateReview.content,
+    };
+    //We need to grab product_id to use in the create route URL
+    const reviewID = parseInt(updateReview.id_represented, 10);
+
+    //Pass in the ID to the UPDATE ROUTE and pass in the cleaned data
+    await fetch("http://localhost:3000" + "/reviews/" + reviewID, {
+      method: "put",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(reviewData),
+    }).then(() => {
+      getProducts();
+    });
+    console.log("Review Updated: ", updateReview, " ID: ", reviewID);
+  };
+
+  // ------ DELETE ROUTE ------
+  const deleteReview = (urlID) => {
+    fetch("http://localhost:3000" + "/reviews/" + urlID, {
+      method: "delete",
+    }).then(() => {
+      history.push("/");
+      getProducts();
+    });
+
+    console.log("Deleted review ID ", urlID);
   };
 
   // ---------- VARIABLE TO MAKE A PLACEHOLDER REVIEW ------
@@ -78,7 +116,11 @@ function App() {
         <Route
           path="/products/:id/reviews"
           render={(routerProps) => (
-            <ReviewDisplay {...routerProps} currentProduct={selectedProduct} />
+            <ReviewDisplay
+              {...routerProps}
+              currentProduct={selectedProduct}
+              deleteReview={deleteReview}
+            />
           )}
         />
         <Route
@@ -86,6 +128,13 @@ function App() {
           path="/createreviews/:id"
           render={(rp) => (
             <Form {...rp} label="create" handleSubmit={handleCreate} />
+          )}
+        />
+        <Route
+          exact
+          path="/reviews/:id"
+          render={(rp) => (
+            <Form {...rp} label="update" handleSubmit={handleUpdate} />
           )}
         />
       </Switch>
