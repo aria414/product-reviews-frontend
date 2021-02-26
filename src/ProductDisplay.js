@@ -15,7 +15,7 @@ const ProductDisplay = (props) => {
   // -- This function will push you to the /products/:prodID/reviews page where you can see the review for a specific item.
   // -- First it will use the selectProduct prop function passed down to send back the current item User selects.
   //-- Then the APP will set the current product and pass that current to ReviewDisplay.js. Then this function pushes you to the URL /products/:prodID/review
-  function handleClick(id) {
+  const handleClick = (id) => {
     console.log("You selected product # ", id);
 
     const currentProduct = products.filter((item) => {
@@ -25,8 +25,13 @@ const ProductDisplay = (props) => {
     console.log("PRODUCT DISPLAY current product: ", currentProduct);
 
     history.push(`/products/${id}/reviews`);
-  }
+  };
 
+  // ----- FUNCTION TO WRITE A REVIEW ------
+  const clickCreate = (id) => {
+    console.log("You selected product # ", id);
+    history.push(`/createreviews/${id}`);
+  };
   //----------- LOADED FUNCTION TO USE WHEN PROPS ARE LOADED ------------
   const loaded = () => {
     console.log("Product Display props: ", products);
@@ -37,13 +42,8 @@ const ProductDisplay = (props) => {
           <img src={item.img} alt={item.name} />
           <p>{item.name}</p>
           <p>Nmber of Reviews: {item.reviews.length}</p>
-          <button
-            onClick={() => {
-              handleClick(item.id);
-            }}
-          >
-            View Reviews
-          </button>
+          <button onClick={() => handleClick(item.id)}>View Reviews</button>
+          <button onClick={() => clickCreate(item.id)}>Write a Review</button>
         </section>
       );
     });
@@ -62,7 +62,7 @@ const ProductDisplay = (props) => {
   };
 
   //----------- TERNARY OPERATOR TO CHOOSE WHICH FUNCTION TO USE  ------------
-  return products.length > 0 ? loaded() : loading();
+  return products ? loaded() : loading();
 };
 
 export default ProductDisplay;

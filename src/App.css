@@ -2,7 +2,9 @@
   text-align: center;
 }
 .productCard {
-  border: 1px solid;
+  border: 2px solid #c4c4c4;
   margin: 0 auto 2% auto;
   width: 300px;
+  padding: 1%;
+  background: #f5f1ea;
 }
